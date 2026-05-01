@@ -1,16 +1,18 @@
 ---
-name: Nix
+name: nix
 description: Expert guidance on Nix, NixOS, and home-manager best practices. USE WHEN working with Nix expressions, NixOS configuration, home-manager, flakes, or Nix package development.
 ---
 
 # Nix Best Practices
 
 ## Purpose
+
 Expert guidance on Nix, NixOS, and home-manager following best practices.
 
 ### Context Detection
 
 **This skill activates when:**
+
 - Current directory contains `flake.nix`, `default.nix`, `shell.nix`, or `configuration.nix`
 - Git repository contains Nix configuration files
 - User is working with `.nix` files
@@ -22,7 +24,7 @@ Expert guidance on Nix, NixOS, and home-manager following best practices.
 When the user's request matches specific Nix operations, route to the appropriate workflow:
 
 | Workflow | Trigger | File |
-|----------|---------|------|
+| ---------- | --------- | ------ |
 | **Build** | "build nix package", "nixos-rebuild build", "compile nix" | `workflows/Build.md` |
 | **Debug** | "debug nix", "nix error", "troubleshoot build", "evaluation error" | `workflows/Debug.md` |
 | **Develop** | "development shell", "nix develop", "devShell", "direnv" | `workflows/Develop.md` |
@@ -34,6 +36,7 @@ When the user's request matches specific Nix operations, route to the appropriat
 | **Troubleshoot** | "hash mismatch", "nix failing", "common errors", "fix nix issue" | `workflows/Troubleshoot.md` |
 
 **When to use workflows:**
+
 - Route when the user explicitly asks about one of these operations
 - Workflows provide comprehensive, focused guidance for specific Nix tasks
 - For general Nix guidance or module configuration, continue with this main skill
@@ -50,12 +53,15 @@ systemd.services.nginx.postStart = "systemctl start nginx";
 ```
 
 ### 2. Reproducibility
+
 Same inputs = Same outputs
+
 - Pin versions explicitly
 - Use flake.lock for consistency
 - Avoid impure operations
 
 ### 3. Modularity
+
 Break configurations into focused, reusable modules
 ```nix
 # Good: Modular
@@ -69,12 +75,15 @@ imports = [
 ```
 
 ### 4. Version Control Everything
+
 - Track all Nix configurations in git
 - Commit flake.lock changes
 - Document why changes were made
 
 ### 5. Use Flakes for Modern Nix
+
 Flakes provide:
+
 - Hermetic evaluation
 - Standardized structure
 - Dependency locking
@@ -117,7 +126,9 @@ systems/common/
 ```
 
 ### Checking globals.nix
+
 Always check `globals.nix` for:
+
 - Machine definitions (IPs, SSH keys)
 - DNS zone configurations
 - VPN settings
@@ -155,7 +166,9 @@ Always check `globals.nix` for:
 ```
 
 ### Use Types Correctly
+
 Common types:
+
 - `types.bool` - Boolean values
 - `types.int` - Integers
 - `types.str` - Strings
@@ -394,6 +407,7 @@ nixos-rebuild switch --switch-generation <number>
 ```
 
 ### Keep Old Generations
+
 - Never delete all old generations
 - Keep at least 2-3 recent generations for rollback
 - Clean periodically with: `nix-collect-garbage -d`
@@ -490,6 +504,7 @@ nix-prefetch-github owner repo --rev <commit-hash>
 ```
 
 #### Import Cycles
+
 - Check for circular imports
 - Use `lib.mkIf` to break cycles
 - Restructure module organization
@@ -497,12 +512,14 @@ nix-prefetch-github owner repo --rev <commit-hash>
 ## Performance
 
 ### Build Optimization
+
 - Use binary caches
 - Avoid rebuilding unnecessarily
 - Keep flake.lock updated but stable
 - Use `nix-direnv` for development shells
 
 ### Evaluation Speed
+
 - Minimize use of `import`
 - Use `builtins` wisely
 - Avoid expensive list operations in hot paths
@@ -510,6 +527,7 @@ nix-prefetch-github owner repo --rev <commit-hash>
 ## Security
 
 ### Security-First Approach
+
 NixOS provides unique security advantages through its declarative model and immutable store, but requires active hardening for production systems.
 
 ### Quick Security Wins
@@ -539,6 +557,7 @@ NixOS provides unique security advantages through its declarative model and immu
 ```
 
 ### Hardened Profile
+
 For security-critical systems, use the hardened profile:
 ```nix
 imports = [
@@ -549,6 +568,7 @@ imports = [
 See `workflows/Security.md` for comprehensive hardening guidance.
 
 ### Security Checklist
+
 - [ ] Firewall enabled with default deny
 - [ ] SSH hardened (no root, no passwords)
 - [ ] Secrets encrypted with agenix
@@ -570,17 +590,20 @@ See `workflows/Security.md` for comprehensive hardening guidance.
 ### For ~/src/home Repository
 
 #### Adding a New Host
+
 1. Create `/systems/<hostname>` with `boot.nix`, `hardware.nix`
 2. Add to `flake.nix` using `libx.mkHost`
 3. Update `globals.nix` with machine metadata
 4. Add to `secrets.nix` if using secrets
 
 #### Adding a New Package
+
 1. Create `/pkgs/<package-name>/default.nix`
 2. Add to `/pkgs/default.nix` with `callPackage`
 3. Test with `nix build .#<package-name>`
 
 #### Common Commands
+
 - Build: `make switch`
 - Format: `make fmt`
 - Clean: `make clean`
